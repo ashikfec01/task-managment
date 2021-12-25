@@ -6,15 +6,21 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
-  url      = env("SQLITE_DATABASE_URL")
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
 }
 
 model Task {
   id              Int   @default(autoincrement())@id
   title           String
   description     String
-  status          String
+  status          TaskStatus @default(OPEN)
+}
+
+enum TaskStatus {
+  OPEN
+  IN_PROGRESS
+  DONE 
 }
 
 model User {
