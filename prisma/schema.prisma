@@ -10,6 +10,20 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model Auth {
+  id        Int @default(autoincrement()) @id
+  username  String
+  password  String @unique 
+  email     String @unique
+  role      UserRole @default(VISITOR) 
+}
+
+enum UserRole {
+  ADMIN
+  MODARATOR
+  VISITOR
+}
+
 model Task {
   id              Int   @default(autoincrement())@id
   title           String
@@ -25,7 +39,7 @@ enum TaskStatus {
 
 model User {
   id    Int     @default(autoincrement()) @id
-  email String  @unique
+  email String  
   name  String?
   posts Post[]
 }
