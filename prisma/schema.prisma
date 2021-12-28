@@ -5,17 +5,22 @@ generator client {
   provider = "prisma-client-js"
 }
 
+generator prismaClassGenerator {
+  provider = "prisma-class-generator"
+}
+
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
 model Auth {
-  id        Int @default(autoincrement()) @id
-  username  String
-  password  String @unique 
-  email     String @unique
-  role      UserRole @default(VISITOR) 
+  id       Int      @id @default(autoincrement())
+  username String
+  password String   @unique
+  email    String   @unique
+  role     UserRole @default(VISITOR)
+  salt     String   @default("salt")
 }
 
 enum UserRole {
@@ -25,30 +30,14 @@ enum UserRole {
 }
 
 model Task {
-  id              Int   @default(autoincrement())@id
-  title           String
-  description     String
-  status          TaskStatus @default(OPEN)
+  id          Int        @id @default(autoincrement())
+  title       String
+  description String
+  status      TaskStatus @default(OPEN)
 }
 
 enum TaskStatus {
   OPEN
   IN_PROGRESS
-  DONE 
-}
-
-model User {
-  id    Int     @default(autoincrement()) @id
-  email String  
-  name  String?
-  posts Post[]
-}
-
-model Post {
-  id        Int      @default(autoincrement()) @id
-  title     String
-  content   String?
-  published Boolean? @default(false)
-  author    User?    @relation(fields: [authorId], references: [id])
-  authorId  Int?
+  DONE
 }

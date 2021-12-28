@@ -1,11 +1,14 @@
-import { IsEmail, IsNotEmpty, IsNumber, IsString, Matches, MaxLength, Min, MinLength } from "class-validator";
+import { UserRole } from '@prisma/client';
+import { IsEmail, IsString, Matches, MaxLength, MinLength } from "class-validator";
 
+// export class AuthInfo implements Auth {
 
+// }
 export class CreateAuthDto {
     @IsString()
     @MinLength(4)
     @MaxLength(20)
-    username: string;
+    username: any;
 
     @IsString()
     @MinLength(4)
@@ -14,18 +17,11 @@ export class CreateAuthDto {
         /((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$/,
         { message: 'password too weak' },
     )
-    password: string;
+    password: any;
 
     @IsEmail()
     email: string;
-
-    @IsNotEmpty()
-    @IsNumber()
-    @Min(0)
     role: UserRole = UserRole.VISITOR;
-}
-export enum UserRole {
-    ADMIN,
-    MODARATOR,
-    VISITOR
+
+    salt: any;
 }

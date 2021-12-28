@@ -1,17 +1,27 @@
 import { Body, Controller, Delete, Get, Param, Patch, Post, UsePipes, ValidationPipe } from '@nestjs/common';
 import { Auth } from '@prisma/client';
-import { AuthService } from './auth.service';
-import { CreateAuthDto } from './dto/create-auth.dto';
+// import * as bcrypt from 'bcrypt';
+import { AuthDto } from 'src/_gen/prisma-class/auth.dto';
 import { UpdateAuthDto } from './dto/update-auth.dto';
+import { AuthEncryptionService } from './_services/auth-encryption.service';
+import { AuthService } from './_services/auth.service';
 
 @Controller('auth')
 export class AuthController {
-  constructor(private readonly authService: AuthService) { }
+  bcrypt = require('bcrypt');
+  constructor(private readonly authService: AuthService, private authEncription: AuthEncryptionService) { }
 
   @Post('/signup')
   @UsePipes(ValidationPipe)
-  async createUser(@Body() createAuthDto: CreateAuthDto): Promise<Auth> {
-    return this.authService.createUser(createAuthDto);
+  createUser(@Body() authDto: AuthDto) {
+    this.authEncription.encriptionMethod(authDto.username, authDto.password).then(res => {
+      console.log("res", res);
+      authDto.username = res.username;
+      authDto.password = res.password;
+      authDto.salt = res.salt;
+    }).finally(
+      () => this.authService.createUser(authDto)
+    )
   }
   // create(@Body() createAuthDto: CreateAuthDto) {
   //   return this.authService.create(createAuthDto);
