@@ -6,10 +6,8 @@ import { UpdateAuthDto } from '../dto/update-auth.dto';
 @Injectable()
 export class AuthService {
   constructor(
-    private prisma: PrismaService,
-    // private jwtService: JwtService,
-  ) { }
-
+    private prisma: PrismaService, // private jwtService: JwtService,
+  ) {}
 
   async createUser(data): Promise<Auth> {
     return this.prisma.auth.create({
@@ -28,17 +26,21 @@ export class AuthService {
     return `This action returns all auth`;
   }
 
-  async getUserById(authWhereUniqueInput: Prisma.AuthWhereUniqueInput): Promise<Auth | undefined> {
+  async getUserById(
+    authWhereUniqueInput: Prisma.AuthWhereUniqueInput,
+  ): Promise<Auth | undefined> {
     return this.prisma.auth.findUnique({
-      where: authWhereUniqueInput
-    })
+      where: authWhereUniqueInput,
+    });
   }
 
   update(id: number, updateAuthDto: UpdateAuthDto) {
     return `This action updates a #${id} auth`;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} auth`;
+  async remove(authWhereUniqueInput: Prisma.AuthWhereUniqueInput) {
+    console.log('delete success', authWhereUniqueInput);
+
+    await this.prisma.auth.delete({ where: authWhereUniqueInput });
   }
 }

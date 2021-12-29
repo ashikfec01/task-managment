@@ -1,4 +1,10 @@
-import { Body, Controller, Post, UsePipes, ValidationPipe } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Post,
+  UsePipes,
+  ValidationPipe,
+} from '@nestjs/common';
 import { Task } from '@prisma/client';
 import { CreateTaskDto } from './dto/create-task.dto';
 // import { Task, TaskStatus } from './_models/taskInterface.model';
@@ -6,7 +12,7 @@ import { TasksService } from './_services/tasks.service';
 
 @Controller('tasks')
 export class TasksController {
-  constructor(private readonly tasksService: TasksService) { }
+  constructor(private readonly tasksService: TasksService) {}
 
   @Post()
   @UsePipes(ValidationPipe)
