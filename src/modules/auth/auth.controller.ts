@@ -19,7 +19,7 @@ import { Auth } from '@prisma/client';
 // import * as bcrypt from 'bcrypt';
 import { AuthDto } from 'src/_gen/prisma-class/auth.dto';
 import { UpdateAuthDto } from './dto/update-auth.dto';
-import { UniqueVerification } from './pipes/unique.pipe';
+import { UniqueVerification, UsrValid } from './pipes/unique.pipe';
 import { AuthEncryptionService } from './_services/auth-encryption.service';
 import { AuthService } from './_services/auth.service';
 
@@ -33,7 +33,7 @@ export class AuthController {
   ) {}
 
   @Post('/signup')
-  @UsePipes(ValidationPipe)
+  @UsePipes(ValidationPipe, UsrValid)
   createUser(@Body() authDto: AuthDto) {
     // @UsePipes(UniqueVerification)
     this.uniqueVerify.verifyUsername(authDto.username).then((res) => {
@@ -46,12 +46,13 @@ export class AuthController {
             authDto.salt = res.salt;
           })
           .finally(() => this.authService.createUser(authDto));
-      } else {
-        this.uniqueVerify.transform(res.length);
-        console.log('else');
-        Logger.log('Invalid');
-        throw new NotAcceptableException();
       }
+      // else {
+      //   this.uniqueVerify.transform(res.length);
+      //   console.log('else');
+      //   Logger.log('Invalid');
+      //   throw new NotAcceptableException();
+      // }
     });
   }
   // create(@Body() createAuthDto: CreateAuthDto) {

@@ -5,11 +5,12 @@ import { UpdateAuthDto } from '../dto/update-auth.dto';
 
 @Injectable()
 export class AuthService {
-  constructor(
-    private prisma: PrismaService, // private jwtService: JwtService,
-  ) {}
+  constructor(private prisma: PrismaService) {}
 
   async createUser(data): Promise<Auth> {
+    // const access_token = this.jwtService.sign(data);
+    console.log('access-token');
+
     return this.prisma.auth.create({
       data,
     });
